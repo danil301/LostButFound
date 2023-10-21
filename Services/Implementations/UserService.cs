@@ -17,9 +17,9 @@ namespace LostButFound.API.Services.Implementations
     {
         public IUserRepository _userRepository;
 
-        public UserViewModel uvm;
+        public static UserViewModel uvm;
 
-        public string Code;
+        public static string Code;
 
         public UserService(IUserRepository userRepository)
         {
