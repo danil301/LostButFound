@@ -5,6 +5,7 @@ using LostButFound.API.Domian.ViewModels;
 using LostButFound.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -26,6 +27,7 @@ namespace LostButFound.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserViewModel userViewModel)
         {
+            var x = User.Identity.Name;
             if(ModelState.IsValid)
             {
                 var response = _userService.SendCode(userViewModel);
@@ -40,6 +42,7 @@ namespace LostButFound.API.Controllers
                 ModelState.AddModelError("", response.Description);
             }
             return Ok("User has been registered");
+
         }
 
         [HttpPost]
@@ -53,6 +56,36 @@ namespace LostButFound.API.Controllers
             return BadRequest(response.Result.Description);
         }
 
+        [HttpGet]
+        public IActionResult ResendCode()
+        {
+            var response = _userService.ResendCode();
+            return Ok(response.Description);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginVeiwModel loginVeiwModel)
+        {
+            var response = await _userService.Login(loginVeiwModel);
+            
+            if (response.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(response.Data));               
+                return Ok(response.Description);
+            }
+            if (response.StatusCode == Domian.Enum.StatusCode.NotFound) return BadRequest(response.Description);
+            if (response.StatusCode == Domian.Enum.StatusCode.Unauthorized) return BadRequest(response.Description);
+            return BadRequest(response.Description);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<User> GetCurrentUser()
+        {
+            string login = User.Identity.Name;
+            return await _userService.GetUserByLogin(login);
+        }
     }
 
    

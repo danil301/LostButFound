@@ -17,24 +17,27 @@ namespace LostButFound.API.Services.Implementations
     {
         public IUserRepository _userRepository;
 
-        public UserViewModel uvm;
+        public static UserViewModel uvm;
 
-        public string Code;
+        public static string Code;
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-
+        public async Task<User> GetUserByLogin(string login)
+        {
+            return await _userRepository.GetByName(login);
+        }
 
         private async Task<BaseResponse<bool>> CheckExist(string email, string login)
         {
             var users = await _userRepository.Select();
-            var Email = users.Where(x => x.Email == email);
-            var Login = users.Where(x => x.Login == login);
+            var Email = users.FirstOrDefault(x => x.Email == email);
+            var Login = users.FirstOrDefault(x => x.Login == login);
 
-            if (Email == null)
+            if (Email != null)
             {
                 return new BaseResponse<bool>()
                 {
@@ -44,7 +47,7 @@ namespace LostButFound.API.Services.Implementations
                 };
             }
 
-            if (Login == null)
+            if (Login != null)
             {
                 return new BaseResponse<bool>()
                 {
@@ -127,32 +130,43 @@ namespace LostButFound.API.Services.Implementations
             }
         }
 
+        public BaseResponse<string> ResendCode()
+        {
+            Cryptographer cryptographer = new Cryptographer();
+            Code = cryptographer.GenerateEmailCode();
+            EmailSender emailSender = new EmailSender();
+            emailSender.SendEmailCode(uvm.Email, Code);
+            return new BaseResponse<string>()
+            {
+                Description = Code,
+                Data = "Пользователю повторно выслан код",
+                StatusCode = StatusCode.OK
+            };
+        }
 
 
         public async Task<BaseResponse<ClaimsIdentity>> Login(LoginVeiwModel model)
         {
             try
-            {
-                var user = await _userRepository.GetByName(model.Login);
+            {                
+                var user = _userRepository.Select().Result.FirstOrDefault(x => x.Login == model.LoginOrEmail || x.Email == model.LoginOrEmail);              
+                
                 if (user == null)
                 {
                     return new BaseResponse<ClaimsIdentity>()
                     {
                         Description = "Пользователь не найден",
+                        StatusCode = StatusCode.NotFound
                     };
                 }
-
-                string pas = String.Empty;
-                using (SHA256 sha256 = SHA256.Create())
-                {
-                    byte[] hashValue = sha256.ComputeHash(Encoding.UTF8.GetBytes(model.Password.Trim()));
-                    pas = BitConverter.ToString(hashValue).Replace("-", "");
-                }
+                Cryptographer cryptographer = new Cryptographer();
+                string pas = cryptographer.DecryptPassword(model.Password);
 
                 if (user.Password != pas)
                 {
                     return new BaseResponse<ClaimsIdentity>()
                     {
+                        StatusCode = StatusCode.Unauthorized,
                         Description = "Пароль не верный",
                     };
                 }
@@ -160,6 +174,7 @@ namespace LostButFound.API.Services.Implementations
 
                 return new BaseResponse<ClaimsIdentity>()
                 {
+                    Description = "Пользователь авторизован",
                     Data = result,
                     StatusCode = StatusCode.OK
                 };

@@ -28,5 +28,16 @@ namespace LostButFound.API.Services.Helpers
             }
             return pas;
         }
+
+        public string DecryptPassword(string password)
+        {
+            string pas = string.Empty;
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashValue = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                pas = BitConverter.ToString(hashValue).Replace("-", "");
+            }
+            return pas;
+        }
     }
 }

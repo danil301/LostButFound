@@ -5,20 +5,27 @@ using LostButFound.API.DAL.Interfaces;
 using LostButFound.API.DAL.Repositories;
 using LostButFound.API.Services.Implementations;
 using LostButFound.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
 
 var connection = builder.Configuration.GetConnectionString("LostButFoundConnectionString");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connection));
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-// Add services to the container.
 
-builder.Services.AddControllers();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -45,6 +52,7 @@ app.UseRouting();
 
 app.UseCors("corspolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
