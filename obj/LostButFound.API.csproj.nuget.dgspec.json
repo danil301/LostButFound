@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\VS\\project2k\\LostButFound\\LostButFound.API.csproj": {}
+    "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound.API\\LostButFound.API.csproj": {}
   },
   "projects": {
-    "D:\\VS\\project2k\\LostButFound\\LostButFound.API.csproj": {
+    "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound.API\\LostButFound.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\VS\\project2k\\LostButFound\\LostButFound.API.csproj",
+        "projectUniqueName": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound.API\\LostButFound.API.csproj",
         "projectName": "LostButFound.API",
-        "projectPath": "D:\\VS\\project2k\\LostButFound\\LostButFound.API.csproj",
-        "packagesPath": "C:\\Users\\danre\\.nuget\\packages\\",
-        "outputPath": "D:\\VS\\project2k\\LostButFound\\obj\\",
+        "projectPath": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound.API\\LostButFound.API.csproj",
+        "packagesPath": "C:\\Users\\dvory\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound.API\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\danre\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dvory\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -77,8 +81,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -90,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }
