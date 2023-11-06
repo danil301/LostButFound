@@ -17,10 +17,11 @@ namespace LostButFound.API.Controllers
     public class UserController : Controller
     {
         public IUserService _userService;
-
-        public UserController(IUserService userService)
+        private readonly ILogger<UserController> _logger;
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
 
@@ -67,11 +68,14 @@ namespace LostButFound.API.Controllers
         public async Task<IActionResult> Login(LoginVeiwModel loginVeiwModel)
         {
             var response = await _userService.Login(loginVeiwModel);
-            
+            var claimsPrincipal = new ClaimsPrincipal(response.Data);
+            _logger.LogInformation("ClaimsPrincipal: {0}", claimsPrincipal);
             if (response.StatusCode == Domian.Enum.StatusCode.OK)
             {
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(response.Data));               
+                
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                string login = User.Identity.Name;
+
                 return Ok(response.Description);
             }
             if (response.StatusCode == Domian.Enum.StatusCode.NotFound) return BadRequest(response.Description);

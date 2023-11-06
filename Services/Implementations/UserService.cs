@@ -5,6 +5,9 @@ using LostButFound.API.Domian.Response;
 using LostButFound.API.Domian.ViewModels;
 using LostButFound.API.Services.Helpers;
 using LostButFound.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -17,13 +20,16 @@ namespace LostButFound.API.Services.Implementations
     {
         public IUserRepository _userRepository;
 
+        private readonly IConfiguration _configuration;
+
         public static UserViewModel uvm;
 
         public static string Code;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<User> GetUserByLogin(string login)
@@ -194,10 +200,10 @@ namespace LostButFound.API.Services.Implementations
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role),
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimTypes.Role, user.Role),
             };
-            return new ClaimsIdentity(claims, "ApplicationCookie",
+            return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
                 ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }

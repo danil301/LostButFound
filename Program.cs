@@ -6,10 +6,14 @@ using LostButFound.API.DAL.Repositories;
 using LostButFound.API.Services.Implementations;
 using LostButFound.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 
 var connection = builder.Configuration.GetConnectionString("LostButFoundConnectionString");
 
@@ -18,17 +22,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
+
 builder.Services.AddAuthorization();
+
+builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddSwaggerGen();
 
+//builder.Services.AddHttpContextAccessor();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 {
@@ -44,9 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseRouting();
 
@@ -54,6 +61,7 @@ app.UseCors("corspolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
