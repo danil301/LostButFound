@@ -14,18 +14,41 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 
 var connection = builder.Configuration.GetConnectionString("LostButFoundConnectionString");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connection));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    var secret = builder.Configuration.GetValue<string>("Secret");
+    var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
+    x.RequireHttpsMetadata = true;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidAudience = "https://localhost:7000/",
+        ValidIssuer = "https://localhost:7000/",
+        IssuerSigningKey = key,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+}); 
 
-builder.Services.AddControllers();
+
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -41,7 +64,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 {
-    build.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+    build.WithOrigins("http://192.168.31.64:5173").AllowAnyMethod().AllowAnyHeader();
 }));
 
 var app = builder.Build();

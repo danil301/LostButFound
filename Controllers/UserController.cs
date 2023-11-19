@@ -5,6 +5,7 @@ using LostButFound.API.Domian.ViewModels;
 using LostButFound.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +18,14 @@ namespace LostButFound.API.Controllers
     public class UserController : Controller
     {
         public IUserService _userService;
-        private readonly ILogger<UserController> _logger;
-        public UserController(IUserService userService, ILogger<UserController> logger)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _logger = logger;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Register(UserViewModel userViewModel)
         {
-            var x = User.Identity.Name;
             if(ModelState.IsValid)
             {
                 var response = _userService.SendCode(userViewModel);
@@ -43,7 +40,6 @@ namespace LostButFound.API.Controllers
                 ModelState.AddModelError("", response.Description);
             }
             return Ok("User has been registered");
-
         }
 
         [HttpPost]
@@ -68,15 +64,10 @@ namespace LostButFound.API.Controllers
         public async Task<IActionResult> Login(LoginVeiwModel loginVeiwModel)
         {
             var response = await _userService.Login(loginVeiwModel);
-            var claimsPrincipal = new ClaimsPrincipal(response.Data);
-            _logger.LogInformation("ClaimsPrincipal: {0}", claimsPrincipal);
+
             if (response.StatusCode == Domian.Enum.StatusCode.OK)
             {
-                
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-                string login = User.Identity.Name;
-
-                return Ok(response.Description);
+                return Ok(response.Data);
             }
             if (response.StatusCode == Domian.Enum.StatusCode.NotFound) return BadRequest(response.Description);
             if (response.StatusCode == Domian.Enum.StatusCode.Unauthorized) return BadRequest(response.Description);
@@ -84,7 +75,7 @@ namespace LostButFound.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<User> GetCurrentUser()
         {
             string login = User.Identity.Name;

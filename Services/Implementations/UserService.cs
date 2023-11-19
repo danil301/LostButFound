@@ -93,7 +93,7 @@ namespace LostButFound.API.Services.Implementations
 
         }
 
-        public async Task<BaseResponse<ClaimsIdentity>> Register(string code)
+        public async Task<BaseResponse<string>> Register(string code)
         {
             try
             {
@@ -111,16 +111,14 @@ namespace LostButFound.API.Services.Implementations
                     };
 
                     await _userRepository.Create(user);
-                    var result = Authenticate(user);
 
-                    return new BaseResponse<ClaimsIdentity>()
+                    return new BaseResponse<string>()
                     {
-                        Data = result,
                         Description = "Пользователь добавился",
                         StatusCode = StatusCode.Created
                     };
                 }
-                return new BaseResponse<ClaimsIdentity>()
+                return new BaseResponse<string>()
                 {
                     Description = "Неверный код",
                     StatusCode = StatusCode.OK
@@ -128,7 +126,7 @@ namespace LostButFound.API.Services.Implementations
             }
             catch(Exception ex)
             {
-                return new BaseResponse<ClaimsIdentity>()
+                return new BaseResponse<string>()
                 {
                     Description = ex.Message,
                     StatusCode = StatusCode.IternalServerError
@@ -150,8 +148,7 @@ namespace LostButFound.API.Services.Implementations
             };
         }
 
-
-        public async Task<BaseResponse<ClaimsIdentity>> Login(LoginVeiwModel model)
+        public async Task<BaseResponse<string>> Login(LoginVeiwModel model)
         {
             try
             {                
@@ -159,7 +156,7 @@ namespace LostButFound.API.Services.Implementations
                 
                 if (user == null)
                 {
-                    return new BaseResponse<ClaimsIdentity>()
+                    return new BaseResponse<string>()
                     {
                         Description = "Пользователь не найден",
                         StatusCode = StatusCode.NotFound
@@ -170,24 +167,23 @@ namespace LostButFound.API.Services.Implementations
 
                 if (user.Password != pas)
                 {
-                    return new BaseResponse<ClaimsIdentity>()
+                    return new BaseResponse<string>()
                     {
                         StatusCode = StatusCode.Unauthorized,
                         Description = "Пароль не верный",
                     };
                 }
-                var result = Authenticate(user);
-
-                return new BaseResponse<ClaimsIdentity>()
+                var resp = GenerateAuthorizationToken(user);
+                return new BaseResponse<string>()
                 {
+                    Data = resp,
                     Description = "Пользователь авторизован",
-                    Data = result,
                     StatusCode = StatusCode.OK
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponse<ClaimsIdentity>()
+                return new BaseResponse<string>()
                 {
                     Description = ex.Message,
                     StatusCode = StatusCode.IternalServerError
@@ -195,16 +191,27 @@ namespace LostButFound.API.Services.Implementations
             }
         }
 
-
-        private ClaimsIdentity Authenticate(User user)
+        private string GenerateAuthorizationToken(User user)
         {
-            var claims = new List<Claim>
+            var secret = "secret*secret123secret444";
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
+
+            var userClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role),
             };
-            return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+            var jwt = new JwtSecurityToken(
+                    claims: userClaims,
+                    expires: DateTime.Now.AddHours(2),
+                    audience: "https://localhost:7000/",
+                    issuer: "https://localhost:7000/",
+                    signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return encodedJwt;
         }
     }
 }

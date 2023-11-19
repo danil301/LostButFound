@@ -8,12 +8,12 @@ namespace LostButFound.API.Services.Interfaces
     public interface IUserService
     {
         Task<User> GetUserByLogin(string login);
-        Task<BaseResponse<ClaimsIdentity>> Register(string code);
+        Task<BaseResponse<string>> Register(string code);
 
         BaseResponse<string> SendCode(UserViewModel userViewModel);
 
         BaseResponse<string> ResendCode();
 
-        Task<BaseResponse<ClaimsIdentity>> Login(LoginVeiwModel loginVeiwModel);
+        Task<BaseResponse<string>> Login(LoginVeiwModel loginVeiwModel);
     }
 }
