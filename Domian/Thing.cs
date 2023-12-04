@@ -14,7 +14,13 @@
 
         public int IsLost { get; set; }
 
-        public string LostPlace { get; set; }
+        public string City { get; set; }
+
+        public string District { get; set; }
+
+        public string Street { get; set; }
+
+        public string Metro { get; set; }
 
         public int IsApproved { get; set; }
 
