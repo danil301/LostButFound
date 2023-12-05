@@ -1,9 +1,10 @@
-﻿using LostButFound.API.Domian;
+﻿using LostButFound.API.DAL.Interfaces;
+using LostButFound.API.Domian;
 using Microsoft.EntityFrameworkCore;
 
 namespace LostButFound.API.DAL.Repositories
 {
-    public class ThingRepository
+    public class ThingRepository : IThingRepository
     {
         public ApplicationDbContext _db;
 

@@ -29,7 +29,15 @@ namespace LostButFound.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("District")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -39,7 +47,7 @@ namespace LostButFound.API.Migrations
                     b.Property<int>("IsLost")
                         .HasColumnType("int");
 
-                    b.Property<string>("LostPlace")
+                    b.Property<string>("Metro")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -48,6 +56,10 @@ namespace LostButFound.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PathToIMG")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

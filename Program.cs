@@ -52,6 +52,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IThingRepository, ThingRepository>();
+builder.Services.AddScoped<IThingService, ThingService>();
+
 
 builder.Services.AddSwaggerGen();
 
@@ -64,7 +67,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 {
-    build.WithOrigins("http://192.168.31.64:5173").AllowAnyMethod().AllowAnyHeader();
+    build.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
 }));
 
 var app = builder.Build();

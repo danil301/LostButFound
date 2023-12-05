@@ -47,6 +47,15 @@
           "lib/net6.0/BouncyCastle.Cryptography.dll": {}
         }
       },
+      "Dadata/23.6.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Dadata.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Dadata.dll": {}
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -725,6 +734,15 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
         }
       },
+      "Newtonsoft.Json/13.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {}
+        }
+      },
       "Scrutor/3.3.0": {
         "type": "package",
         "dependencies": {
@@ -1252,6 +1270,18 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "Dadata/23.6.1": {
+      "sha512": "0Y9Wda+smAtlfZb9AnhI4/3yo9QGLzTMyogbK6/HeI1TMVi3nOHpguWUZSg4l92wa9AMcb6WOV1FV767Qo1OHA==",
+      "type": "package",
+      "path": "dadata/23.6.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dadata.23.6.1.nupkg.sha512",
+        "dadata.nuspec",
+        "lib/netstandard2.0/Dadata.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -2419,6 +2449,36 @@
         "mono.texttemplating.nuspec"
       ]
     },
+    "Newtonsoft.Json/13.0.3": {
+      "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
     "Scrutor/3.3.0": {
       "sha512": "BwqCnFzp2/Z+pq17iztxlIkR/ZANyPRR4PdE57WL1w/JW4AM/2imoxBWTL3+G+YXA46ce4s9OUgwWqTXYrtI8A==",
       "type": "package",
@@ -3509,6 +3569,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Dadata >= 23.6.1",
       "MailKit >= 4.2.0",
       "Microsoft.AspNet.Mvc >= 5.2.9",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 6.0.24",
@@ -3516,6 +3577,7 @@
       "Microsoft.EntityFrameworkCore >= 7.0.11",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.11",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.11",
+      "Newtonsoft.Json >= 13.0.3",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "Swashbuckle.AspNetCore.Filters >= 7.0.12"
     ]
@@ -3564,6 +3626,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Dadata": {
+            "target": "Package",
+            "version": "[23.6.1, )"
+          },
           "MailKit": {
             "target": "Package",
             "version": "[4.2.0, )"
@@ -3593,6 +3659,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.11, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.3, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
