@@ -4,6 +4,8 @@ using LostButFound.API.Domian;
 using LostButFound.API.Domian.ViewModels;
 using LostButFound.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LostButFound.API.Controllers
 {
@@ -43,25 +45,26 @@ namespace LostButFound.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPost(ThingViewModel thingViewModel)
+        public IActionResult AddPost(string name, string description, string city, string district, string street, string metro)
         {
+            var login = User.Identity.Name;
             Thing thing = new Thing()
             {
-                City = thingViewModel.City,
-                Street = thingViewModel.Street,
-                Metro = thingViewModel.Metro,
-                Name = thingViewModel.Name,
-                Description = thingViewModel.Description,
+                City = city,
+                Street = street,
+                Metro = metro,
+                Name = name,
+                Description = description,
                 UserName = User.Identity.Name,
                 IsLost = 1,
                 IsApproved = 0,
                 PathToIMG = "no yet",
-                District = thingViewModel.District
+                District = district
             };
             
             _thingService.SetThing(thing);
 
-            return Ok("Object has been added");
+            return Ok();
         }
     }
 

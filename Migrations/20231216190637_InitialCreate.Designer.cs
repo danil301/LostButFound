@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LostButFound.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231205082322_InitialCreate")]
+    [Migration("20231216190637_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
