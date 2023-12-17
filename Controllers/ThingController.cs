@@ -45,7 +45,8 @@ namespace LostButFound.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPost(string name, string description, string city, string district, string street, string metro)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddPost(string name, string description, string city, string district, string street, string metro)
         {
             var login = User.Identity.Name;
             Thing thing = new Thing()
@@ -55,16 +56,30 @@ namespace LostButFound.API.Controllers
                 Metro = metro,
                 Name = name,
                 Description = description,
-                UserName = User.Identity.Name,
+                UserName = login,
                 IsLost = 1,
                 IsApproved = 0,
                 PathToIMG = "no yet",
                 District = district
             };
             
-            _thingService.SetThing(thing);
+           await _thingService.SetThing(thing);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<List<Thing>> GetPosts()
+        {
+            var response = await _thingService.GetThings();
+            if (response.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                return response.Data;
+            }
+            else
+            {
+                return new List<Thing>();
+            }
         }
     }
 

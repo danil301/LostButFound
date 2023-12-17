@@ -43,5 +43,12 @@ namespace LostButFound.API.DAL.Repositories
         {
             return await _db.Users.ToListAsync();
         }
+
+        public async Task<bool> Update(User entity)
+        {
+            _db.Users.Update(entity);
+            await _db.SaveChangesAsync();
+            return true;
+        }
     }
 }

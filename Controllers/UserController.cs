@@ -81,6 +81,22 @@ namespace LostButFound.API.Controllers
             string login = User.Identity.Name;
             return await _userService.GetUserByLogin(login);
         }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateLogin(string newLogin)
+        {
+            string login = User.Identity.Name;
+            var response = await _userService.UpdateUserLogin(login, newLogin);
+            if (response.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                login = User.Identity.Name;
+                var tok = response.Data;
+                return Ok(response.Data);
+            }
+
+            return BadRequest();
+        }
     }
 
    

@@ -37,6 +37,28 @@ namespace LostButFound.API.Services.Implementations
             return await _userRepository.GetByName(login);
         }
 
+        public async Task<BaseResponse<string>> UpdateUserLogin(string login, string newLogin)
+        {
+            User user = await _userRepository.GetByName(login);
+            user.Login = newLogin;
+            var response = await _userRepository.Update(user);
+            if (response)
+            {
+                var token = GenerateAuthorizationToken(user);
+                return new BaseResponse<string>
+                {
+                    Data = token,
+                    StatusCode = StatusCode.OK,
+                    Description = "Логин изменился"
+                };
+            }
+            return new BaseResponse<string>
+            {
+                StatusCode = StatusCode.IternalServerError,
+                Description = "Ошибка при изменении логина"
+            };
+        }
+
         private async Task<BaseResponse<bool>> CheckExist(string email, string login)
         {
             var users = await _userRepository.Select();

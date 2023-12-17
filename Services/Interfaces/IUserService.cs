@@ -15,5 +15,7 @@ namespace LostButFound.API.Services.Interfaces
         BaseResponse<string> ResendCode();
 
         Task<BaseResponse<string>> Login(LoginVeiwModel loginVeiwModel);
+
+        Task<BaseResponse<string>> UpdateUserLogin(string login, string newLogin);
     }
 }

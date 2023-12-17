@@ -27,13 +27,14 @@ namespace LostButFound.API.Services.Implementations
         {
             return new BaseResponse<List<Thing>>
             {
+                StatusCode = Domian.Enum.StatusCode.OK,
                 Data = await _thingRepository.Select(),
             };
         }
 
         public async Task<BaseResponse<string>> SetThing(Thing thing)
         {
-            _thingRepository.Create(thing);
+            await _thingRepository.Create(thing);
             return new BaseResponse<string>
             {
                 Data = "Success",

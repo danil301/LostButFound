@@ -15,11 +15,19 @@ namespace LostButFound.API.DAL.Repositories
 
         public async Task<bool> Create(Thing entity)
         {
-            _db.Things.Add(entity);
-            _db.SaveChangesAsync();
-
-            return true;
+            try
+            {
+                _db.Things.Add(entity);
+                await _db.SaveChangesAsync(); // Дождаться завершения сохранения изменений
+                return true; // Вернуть true только если сохранение прошло успешно
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false; // Вернуть false в случае ошибки
+            }
         }
+
 
         public async Task<bool> Delete(Thing entity)
         {
@@ -37,6 +45,11 @@ namespace LostButFound.API.DAL.Repositories
         public async Task<List<Thing>> Select()
         {
             return await _db.Things.ToListAsync();
+        }
+
+        public Task<bool> Update(Thing entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
