@@ -26,7 +26,7 @@ namespace LostButFound.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserViewModel userViewModel)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var response = _userService.SendCode(userViewModel);
                 if (response.StatusCode == Domian.Enum.StatusCode.AlreadyExist)
@@ -97,7 +97,32 @@ namespace LostButFound.API.Controllers
 
             return BadRequest();
         }
+
+        public async Task<IActionResult> SendPasswordLink(string email)
+        {
+            var response = _userService.SendEmailForChangePassword(email);
+            if (response.Result.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(response.Result.StatusCode);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(string userId, string newPassword)
+        {
+            var response = _userService.ConfirmChangePassword(userId, newPassword);
+            if (response.Result.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                return Ok();
+
+            }
+            return BadRequest();
+        }
     }
 
-   
+
 }

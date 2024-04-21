@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\LostButFound.API.csproj": {}
+    "D:\\project\\LostButFound\\LostButFound.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\LostButFound.API.csproj": {
+    "D:\\project\\LostButFound\\LostButFound.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\LostButFound.API.csproj",
+        "projectUniqueName": "D:\\project\\LostButFound\\LostButFound.API.csproj",
         "projectName": "LostButFound.API",
-        "projectPath": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\LostButFound.API.csproj",
+        "projectPath": "D:\\project\\LostButFound\\LostButFound.API.csproj",
         "packagesPath": "C:\\Users\\dvory\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\obj\\",
+        "outputPath": "D:\\project\\LostButFound\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

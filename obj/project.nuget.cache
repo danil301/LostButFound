@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UY1xQjtqJ25Sxf5oIJoVFTR63q5jo+pssNAzHb55UQ2c59Jl1pMbBcKn0wwro+TTqFTrj5o4eOglcmbLxGTgAQ==",
+  "dgSpecHash": "Ho6vjwk8ZQuo2P4z+2vtJoABtVrkBh2ct/skyv0uhPDoenPTf8zCei7hmvexmuHGpAh5KncP32nDyWXhV5wlWQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dvory\\Desktop\\LostButFound\\LostButFound\\LostButFound.API.csproj",
+  "projectFilePath": "D:\\project\\LostButFound\\LostButFound.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dvory\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\dvory\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

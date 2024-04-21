@@ -99,7 +99,7 @@ namespace LostButFound.API.Services.Implementations
                 Code = cryptographer.GenerateEmailCode();
                 uvm = userViewModel;
                 EmailSender emailSender = new EmailSender();
-                emailSender.SendEmailCode(userViewModel.Email, Code);
+                emailSender.SendEmailCode(userViewModel.Email, Code, true);
                 return new BaseResponse<string>()
                 {
                     Description = Code,
@@ -161,7 +161,7 @@ namespace LostButFound.API.Services.Implementations
             Cryptographer cryptographer = new Cryptographer();
             Code = cryptographer.GenerateEmailCode();
             EmailSender emailSender = new EmailSender();
-            emailSender.SendEmailCode(uvm.Email, Code);
+            emailSender.SendEmailCode(uvm.Email, Code, true);
             return new BaseResponse<string>()
             {
                 Description = Code,
@@ -213,6 +213,53 @@ namespace LostButFound.API.Services.Implementations
             }
         }
 
+        public async Task<BaseResponse<string>> SendEmailForChangePassword(string email)
+        {
+            var user = _userRepository.Select().Result.FirstOrDefault(x => x.Email == email);
+            if (user != null)
+            {
+                EmailSender emailSender = new EmailSender();
+                Cryptographer cryptographer = new Cryptographer();
+
+                emailSender.SendEmailCode(email, $"http://localhost:5173/updateuserpassword?id={user.Id.ToString()}", false);
+                return new BaseResponse<string>()
+                {
+                    Description = Code,
+                    Data = "Пользователю выслана ссылка",
+                    StatusCode = StatusCode.OK
+                };
+            }
+            return new BaseResponse<string>() 
+            {
+                Data = "Пользователь не найден",
+                StatusCode = StatusCode.NotFound
+            };
+        }
+
+
+
+        public async Task<BaseResponse<string>> ConfirmChangePassword(string id, string newPassword)
+        {
+            Cryptographer cryptographer = new Cryptographer();
+            //id = cryptographer.DecryptPassword(id);
+            var user = _userRepository.Get(int.Parse(id)).Result;
+
+            if (user != null)
+            {
+                user.Password = cryptographer.CryptPassword(newPassword);
+                await _userRepository.Update(user);
+                return new BaseResponse<string>()
+                {
+                    StatusCode = StatusCode.OK
+                };
+            }
+
+            return new BaseResponse<string>()
+            {
+                StatusCode = StatusCode.IternalServerError
+            };
+        }
+
         private string GenerateAuthorizationToken(User user)
         {
             var secret = "secret*secret123secret444";
@@ -235,5 +282,6 @@ namespace LostButFound.API.Services.Implementations
 
             return encodedJwt;
         }
+
     }
 }

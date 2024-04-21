@@ -17,5 +17,9 @@ namespace LostButFound.API.Services.Interfaces
         Task<BaseResponse<string>> Login(LoginVeiwModel loginVeiwModel);
 
         Task<BaseResponse<string>> UpdateUserLogin(string login, string newLogin);
+
+        Task<BaseResponse<string>> SendEmailForChangePassword(string email);
+
+        Task<BaseResponse<string>> ConfirmChangePassword(string id, string newPassword);
     }
 }
