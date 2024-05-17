@@ -11,6 +11,6 @@ namespace LostButFound.API.Services.Interfaces
 
         Task<BaseResponse<string>> SetThing(Thing thing);
 
-
+        Task<BaseResponse<string>> DeleteThing(string login, string name);
     }
 }

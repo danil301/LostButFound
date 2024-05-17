@@ -19,6 +19,7 @@ namespace LostButFound.API.Services.Implementations
     public class UserService : IUserService
     {
         public IUserRepository _userRepository;
+        public IThingRepository _thingRepository;
 
         private readonly IConfiguration _configuration;
 
@@ -26,9 +27,10 @@ namespace LostButFound.API.Services.Implementations
 
         public static string Code;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IThingRepository thingRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _thingRepository = thingRepository;
             _configuration = configuration;
         }
 
@@ -40,10 +42,18 @@ namespace LostButFound.API.Services.Implementations
         public async Task<BaseResponse<string>> UpdateUserLogin(string login, string newLogin)
         {
             User user = await _userRepository.GetByName(login);
+            var things = _thingRepository.Select().Result.Where(x => x.UserName == login);
             user.Login = newLogin;
             var response = await _userRepository.Update(user);
+         
             if (response)
             {
+                foreach (var item in things)
+                {
+                    item.UserName = newLogin;
+                    await _thingRepository.Update(item);
+                }
+                
                 var token = GenerateAuthorizationToken(user);
                 return new BaseResponse<string>
                 {

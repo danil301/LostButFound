@@ -1,7 +1,6 @@
 ﻿using Dadata;
 using Dadata.Model;
 using LostButFound.API.Domian;
-using LostButFound.API.Domian.ViewModels;
 using LostButFound.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,8 +21,8 @@ namespace LostButFound.API.Controllers
         [HttpPost]
         public async Task<IActionResult> EditData(string data)
         {
-            var token = "7068cf85baa1b43c53d92e9eedbb1e7bdec395d1";
-            var secret = "55996817b6f14154aa342ea77480143bbcf9d4c7";
+            var token = "8bf3f6224dfe7b74201b315ce2c1fac770a66c2f";
+            var secret = "db02528010a64af0d36b932ec40f5f773da31897";
             var api = new CleanClientAsync(token, secret);
             var result = await api.Clean<Address>(data);
 
@@ -79,6 +78,33 @@ namespace LostButFound.API.Controllers
             else
             {
                 return new List<Thing>();
+            }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<List<Thing>> GetUserPosts()
+        {
+            var login = User.Identity.Name;
+            var response = _thingService.GetThingsByUserName(login).Result;
+
+            return response.Data;
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteThing(string title)
+        {
+            string login = User.Identity.Name;
+            var response = await _thingService.DeleteThing(login, title);
+
+            if (response.StatusCode == Domian.Enum.StatusCode.OK)
+            {
+                return Ok("Post has been deleted");
+            }
+            else
+            {
+                return BadRequest(response.Data);
             }
         }
     }

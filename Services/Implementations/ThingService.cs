@@ -40,5 +40,27 @@ namespace LostButFound.API.Services.Implementations
                 Data = "Success",
             };
         }
+
+        public async Task<BaseResponse<string>> DeleteThing(string login, string name)
+        {
+            try
+            {
+                var thing = _thingRepository.Select().Result.FirstOrDefault(x => x.UserName == login && x.Name == name);
+                await _thingRepository.Delete(thing);
+
+                return new BaseResponse<string>()
+                {
+                    StatusCode = Domian.Enum.StatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<string>()
+                {
+                    StatusCode = Domian.Enum.StatusCode.IternalServerError,
+                    Data = ex.Message,
+                };
+            }
+        }
     }
 }
